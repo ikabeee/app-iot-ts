@@ -1,12 +1,13 @@
-import { Avatar } from "@heroui/avatar";
+import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@heroui/dropdown";
 import { Input } from "@heroui/input";
 import { Navbar, NavbarContent } from "@heroui/navbar";
-import { SearchIcon } from "lucide-react";
+import { User } from "@heroui/user";
+import { LogOut, SearchIcon } from "lucide-react";
 
 export default function NavbarAdmin() {
     return (
         <Navbar isBordered>
-            <NavbarContent as="div" justify="end">
+            <NavbarContent as="div" className="items-center" justify="end">
                 <Input
                     classNames={{
                         base: "max-w-full sm:max-w h-10",
@@ -17,16 +18,26 @@ export default function NavbarAdmin() {
                     }}
                     placeholder="Escribe para buscar"
                     size="sm"
-                    startContent={<SearchIcon/>}
+                    type="search"
+                    startContent={<SearchIcon />}
                 />
-                <Avatar
-                    isBordered
-                    as="button"
-                    className="transition-transform"
-                    name="John Doe"
-                    size="sm"
-                    src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
-                />
+
+                <Dropdown placement="bottom-end" backdrop="blur">
+                    <DropdownTrigger>
+                        <User
+                            as="button"
+                            avatarProps={{ src: "https://i.pravatar.cc/150?u=a042581f4e29026704d", size: "sm", isBordered: true, color: "secondary", as: "button", isFocusable: true }}
+                            name="Jane Doe"
+                            description="Administrator"
+                            classNames={{ base: "transition-transform", }}
+                        />
+                    </DropdownTrigger>
+                    <DropdownMenu as="button" aria-label="Profile Actions" variant="flat">
+                        <DropdownItem color="danger" variant="faded" key="logout" href="/" startContent={<LogOut />}>
+                            Cerrar sesión
+                        </DropdownItem>
+                    </DropdownMenu>
+                </Dropdown>
             </NavbarContent>
         </Navbar>
     )
