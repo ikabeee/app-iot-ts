@@ -1,4 +1,5 @@
 import { Button } from "@heroui/button";
+import { Image } from "@heroui/image";
 import { LayoutDashboardIcon } from "lucide-react"
 import { Link } from "react-router";
 export default function SidebarAdmin() {
@@ -13,8 +14,17 @@ export default function SidebarAdmin() {
 
     return (
         <aside className="relative w-60 h-screen bg-[#F1F2F7] p-4 flex flex-col">
-            <nav className="space-y-2">
-            
+            <nav className="flex flex-col space-y-2 justify-center items-center">
+                <Link to="">
+                <Image
+                    className="justify-center mb-4"
+                    alt="Logo"
+                    src="./../../public/Bamboo.svg"
+                    width={200}
+                    height={42}
+                />
+                </Link>
+
                 {menuItems.slice(0, 1).map((item) => (
                     <Link key={item.id} to={item.to}>
                         <Button
