@@ -1,8 +1,11 @@
 import { Button } from "@heroui/button";
 import { Image } from "@heroui/image";
-import { LayoutDashboardIcon } from "lucide-react"
+import { DoorClosed, LayoutDashboardIcon, Menu } from "lucide-react"
 import { Link } from "react-router";
-export default function SidebarAdmin() {
+interface SidebarAdminProps {
+    onClose: () => void;
+}
+export default function SidebarAdmin({ onClose }: SidebarAdminProps) {
     const menuItems = [
         {
             id: 1,
@@ -13,23 +16,30 @@ export default function SidebarAdmin() {
     ]
 
     return (
-        <aside className="relative w-60 h-screen bg-[#F1F2F7] p-4 flex flex-col">
-            <nav className="flex flex-col space-y-2 justify-center items-center">
+        <div className="w-64 h-full bg-[#F1F2F7] p-4 flex flex-col shadow-md">
+            <div className="flex justify-between items-center mb-6">
                 <Link to="">
-                <Image
-                    className="justify-center mb-4"
-                    alt="Logo"
-                    src="./../../public/Bamboo.svg"
-                    width={200}
-                    height={42}
-                />
+                    <Image className="justify-center" alt="Logo" src="./../../public/Bamboo.svg" width={180} height={42} />
                 </Link>
+                <Button
+                    isIconOnly
+                    size="sm"
+                    variant="light"
+                    color="secondary"
+                    onPress={onClose}
+                    className="lg:hidden"
+                    aria-label="Close sidebar"
+                >
+                    <Menu size={20} />
+                </Button>
+            </div>
 
-                {menuItems.slice(0, 1).map((item) => (
+            <nav className="flex flex-col space-y-2">
+                {menuItems.map((item) => (
                     <Link key={item.id} to={item.to}>
                         <Button
                             key={item.id}
-                            className="flex items-center justify-start gap-x-4 pl-4 w-[200px] h-[42px] font-medium"
+                            className="flex items-center justify-start gap-x-4 pl-4 w-full h-[42px] font-medium"
                             size="md"
                             radius="sm"
                             variant="light"
@@ -42,6 +52,19 @@ export default function SidebarAdmin() {
                     </Link>
                 ))}
             </nav>
-        </aside>
+
+            <div className="mt-auto pt-4">
+                <Button
+                    startContent={<DoorClosed />}
+                    className="w-full h-[42px]"
+                    size="md"
+                    variant="solid"
+                    color="secondary"
+                    onPress={onClose}
+                >
+                    Cerrar
+                </Button>
+            </div>
+        </div>
     )
 }
