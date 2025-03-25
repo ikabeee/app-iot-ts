@@ -20,7 +20,7 @@ export default function Dashboard() {
                 </div>
 
                 {/* Measure Cards */}
-                <div className="grid grid-cols-2 grid-rows-2 gap-4 justify-center items-center">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 justify-center items-center">
                     <MeasureCard className="w-full h-[150px] mb-0 shadow-medium" icon={Sun} title="Intensidad del sol" value="10%" />
                     <MeasureCard className="w-full h-[150px] shadow-medium" icon={Thermometer} title="Temperatura" value="10%" />
                     <MeasureCard className="w-full h-[150px] shadow-medium" icon={CloudRainWind} title="Probabilidad de lluvia" value="10%" />
@@ -28,6 +28,5 @@ export default function Dashboard() {
                 </div>
             </div>
         </main>
-
     )
 }

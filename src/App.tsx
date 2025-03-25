@@ -5,6 +5,7 @@ import Login from "./pages/auth/Login"
 import Register from "./pages/auth/Register"
 import { HeroUIProvider } from "@heroui/system"
 import DeletedPlots from "./pages/DeletedPlots"
+import Otp from "./pages/auth/Otp"
 declare module "@react-types/shared" {
   interface RouterConfig {
     routerOptions: NavigateOptions;
@@ -17,6 +18,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="register" element={<Register />} />
+        <Route path="otp" element={<Otp />} />
         
         {/* Admin Routes */}
         <Route path="admin" element={<LayoutAdmin />}>
