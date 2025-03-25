@@ -23,6 +23,7 @@
     "@heroui/system": "^2.4.12",
     "@heroui/theme": "^2.4.12",
     "@heroui/user": "^2.2.12",
+    "axios": "^1.8.3",
     "dotenv": "^16.4.7",
     "framer-motion": "^12.5.0",
     "lucide-react": "^0.479.0",
