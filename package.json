@@ -27,6 +27,8 @@
     "@heroui/user": "^2.2.12",
     "axios": "^1.8.3",
     "chart.js": "^4.4.8",
+    "chartjs-adapter-date-fns": "^3.0.0",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
     "framer-motion": "^12.5.0",
     "lucide-react": "^0.479.0",
