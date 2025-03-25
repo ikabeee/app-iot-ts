@@ -34,7 +34,7 @@ export default function SidebarAdmin({ isCollapsed, setIsCollapsed }: SidebarAdm
                 </Link>
                 <Button
                     onPress={() => setIsCollapsed(!isCollapsed)}
-                    className={`flex items-center justify-center transition-all duration-300 ${isCollapsed ? 'w-10 h-10' : 'w-12 h-12'}`}
+                    className={`flex items-center justify-center transition-all duration-300 ${isCollapsed ? 'w-8 h-12' : 'w-12 h-12'}`}
                     size="md"
                     radius="sm"
                     variant="light"
