@@ -34,7 +34,7 @@ export default function SidebarAdmin({ isCollapsed, setIsCollapsed }: SidebarAdm
                 </Link>
                 <Button
                     onPress={() => setIsCollapsed(!isCollapsed)}
-                    className="flex items-center justify-center" 
+                    className={`flex items-center justify-center transition-all duration-300 ${isCollapsed ? 'w-10 h-10' : 'w-12 h-12'}`}
                     size="md"
                     radius="sm"
                     variant="light"
@@ -49,7 +49,7 @@ export default function SidebarAdmin({ isCollapsed, setIsCollapsed }: SidebarAdm
                     <Link key={item.id} to={item.to} className="group">
                         <Button
                             key={item.id}
-                            className={`flex items-center justify-center gap-x-4 w-full ${isCollapsed ? 'h-10 w-[1px]' : 'h-[42px]'} font-medium transition-all duration-300 ${isCollapsed ? 'pl-0' : 'pl-4'}`}
+                            className={`flex items-center justify-start gap-x-4 w-full ${isCollapsed ? 'h-10' : 'h-[42px]'} font-medium transition-all duration-300 ${isCollapsed ? 'pl-0' : 'pl-4'}`}
                             size={isCollapsed ? "sm" : "md"}
                             radius="sm"
                             variant="light"
