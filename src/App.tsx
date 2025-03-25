@@ -4,6 +4,7 @@ import LayoutAdmin from "./layout/LayoutAdmin"
 import Login from "./pages/auth/Login"
 import Register from "./pages/auth/Register"
 import { HeroUIProvider } from "@heroui/system"
+import DeletedPlots from "./pages/DeletedPlots"
 declare module "@react-types/shared" {
   interface RouterConfig {
     routerOptions: NavigateOptions;
@@ -19,6 +20,7 @@ function App() {
         {/* Admin Routes */}
         <Route path="admin" element={<LayoutAdmin />}>
           <Route index element={<Dashboard />} />
+          <Route path="deletedPlots" element={<DeletedPlots/>}/>
         </Route>
       </Routes>
     </HeroUIProvider>

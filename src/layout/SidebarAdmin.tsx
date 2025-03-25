@@ -1,6 +1,6 @@
 import { Button } from "@heroui/button";
 import { Image } from "@heroui/image";
-import { LayoutDashboardIcon, Menu, Trash } from "lucide-react"
+import { LayoutDashboardIcon, Trash } from "lucide-react"
 import { Link } from "react-router";
 
 export default function SidebarAdmin() {
@@ -25,16 +25,6 @@ export default function SidebarAdmin() {
                 <Link to="/admin">
                     <Image className="justify-center items-center" alt="Logo" src="./../../public/Bamboo.svg" width={180} height={42} />
                 </Link>
-                <Button
-                    isIconOnly
-                    size="sm"
-                    variant="light"
-                    color="secondary"
-                    className="lg:hidden"
-                    aria-label="Close sidebar"
-                >
-                    <Menu size={20} />
-                </Button>
             </div>
 
             <nav className="flex flex-col space-y-2">
