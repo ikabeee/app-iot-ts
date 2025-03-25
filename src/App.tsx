@@ -17,6 +17,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="register" element={<Register />} />
+        
         {/* Admin Routes */}
         <Route path="admin" element={<LayoutAdmin />}>
           <Route index element={<Dashboard />} />
