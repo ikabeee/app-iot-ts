@@ -1,24 +1,18 @@
-import { Button } from "@heroui/button"
+
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@heroui/dropdown"
 import { Input } from "@heroui/input"
 import { Navbar, NavbarBrand, NavbarContent } from "@heroui/navbar"
 import { User } from "@heroui/user"
-import { LogOut, Menu, SearchIcon } from "lucide-react"
+import { LogOut, SearchIcon } from "lucide-react"
 
-interface NavbarAdminProps {
-    toggleSidebar: () => void
-}
 
-export default function NavbarAdmin({ toggleSidebar }: NavbarAdminProps) {
+export default function NavbarAdmin() {
     return (
         <Navbar isBordered classNames={{wrapper: "px-0 sm:px-4",brand: "gap-0"}}>
             <NavbarBrand className="gap-0 pl-2" >
-                <Button isIconOnly variant="light" onPress={toggleSidebar} aria-label="Toggle sidebar" className="">
-                    <Menu size={24} />
-                </Button>
             </NavbarBrand>
 
-            <NavbarContent as="div" className="items-center" justify="end">
+            <NavbarContent as="div" className="items-center w-full" justify="end">
                 <Input
                     classNames={{
                         base: "max-w-full sm:max-w h-10",

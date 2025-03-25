@@ -1,11 +1,9 @@
 import { Button } from "@heroui/button";
 import { Image } from "@heroui/image";
-import { DoorClosed, LayoutDashboardIcon, Menu } from "lucide-react"
+import { LayoutDashboardIcon, Menu } from "lucide-react"
 import { Link } from "react-router";
-interface SidebarAdminProps {
-    onClose: () => void;
-}
-export default function SidebarAdmin({ onClose }: SidebarAdminProps) {
+
+export default function SidebarAdmin() {
     const menuItems = [
         {
             id: 1,
@@ -18,15 +16,14 @@ export default function SidebarAdmin({ onClose }: SidebarAdminProps) {
     return (
         <div className="w-64 h-full bg-[#F1F2F7] p-4 flex flex-col shadow-md">
             <div className="flex justify-between items-center mb-6">
-                <Link to="">
-                    <Image className="justify-center" alt="Logo" src="./../../public/Bamboo.svg" width={180} height={42} />
+                <Link to="/admin">
+                    <Image className="justify-center items-center" alt="Logo" src="./../../public/Bamboo.svg" width={180} height={42} />
                 </Link>
                 <Button
                     isIconOnly
                     size="sm"
                     variant="light"
                     color="secondary"
-                    onPress={onClose}
                     className="lg:hidden"
                     aria-label="Close sidebar"
                 >
@@ -52,19 +49,6 @@ export default function SidebarAdmin({ onClose }: SidebarAdminProps) {
                     </Link>
                 ))}
             </nav>
-
-            <div className="mt-auto pt-4">
-                <Button
-                    startContent={<DoorClosed />}
-                    className="w-full h-[42px]"
-                    size="md"
-                    variant="solid"
-                    color="secondary"
-                    onPress={onClose}
-                >
-                    Cerrar
-                </Button>
-            </div>
         </div>
     )
 }
