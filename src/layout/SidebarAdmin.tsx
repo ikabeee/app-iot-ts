@@ -1,6 +1,6 @@
 import { Button } from "@heroui/button";
 import { Image } from "@heroui/image";
-import { LayoutDashboardIcon, Menu } from "lucide-react"
+import { LayoutDashboardIcon, Menu, Trash } from "lucide-react"
 import { Link } from "react-router";
 
 export default function SidebarAdmin() {
@@ -10,6 +10,12 @@ export default function SidebarAdmin() {
             icon: <LayoutDashboardIcon className="text-inherit" />,
             label: "Dashboard",
             to: ''
+        },
+        {
+            id: 2,
+            icon: <Trash className="text-inherit"/>,
+            label: "Parcelas eliminadas",
+            to: 'deletedPlots'
         }
     ]
 
