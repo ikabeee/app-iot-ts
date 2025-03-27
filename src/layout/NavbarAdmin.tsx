@@ -4,8 +4,24 @@ import { Navbar, NavbarBrand, NavbarContent } from "@heroui/navbar"
 import { User } from "@heroui/user"
 import { LogOut, SearchIcon, Bell } from "lucide-react"
 import { Button } from "@heroui/button"
+import { useNavigate } from "react-router-dom"
+import AuthService from "../services/AuthService"
+import { useAuth } from "../context/AuthContext"
 
 export default function NavbarAdmin() {
+    const navigate = useNavigate();
+    const { logout } = useAuth();
+
+    const handleLogout = async () => {
+        try {
+            await AuthService.logout();
+            logout();
+            navigate('/');
+        } catch (error) {
+            console.error('Error al cerrar sesión:', error);
+        }
+    };
+
     return (
         <Navbar 
             isBordered 
@@ -96,7 +112,7 @@ export default function NavbarAdmin() {
                             color="danger" 
                             variant="flat"
                             startContent={<LogOut className="w-4 h-4" />}
-                            href="/"
+                            onClick={handleLogout}
                         >
                             Cerrar sesión
                         </DropdownItem>

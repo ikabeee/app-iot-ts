@@ -138,63 +138,43 @@ export default function Dashboard() {
       new Date(a.date).getTime() - new Date(b.date).getTime()
     );
 
-    // Obtener datos del último día disponible
-    const latestDate = new Date(sortedData[sortedData.length - 1].date);
-    latestDate.setHours(0, 0, 0, 0);
-    
-    const todayData = sortedData.filter(entry => {
-      const entryDate = new Date(entry.date);
-      return entryDate >= latestDate;
-    });
+    // Función para agrupar datos por día
+    const groupDataByDay = (data: HistoryPlot[]) => {
+      const groupedData = data.reduce((acc, entry) => {
+        const date = new Date(entry.date);
+        const dateKey = date.toISOString().split('T')[0];
+        
+        if (!acc[dateKey]) {
+          acc[dateKey] = {
+            date: date,
+            temperature: entry.temperature,
+            humidity: entry.humidity,
+            rain: entry.rain,
+            count: 1
+          };
+        } else {
+          acc[dateKey].temperature = (acc[dateKey].temperature * acc[dateKey].count + entry.temperature) / (acc[dateKey].count + 1);
+          acc[dateKey].humidity = (acc[dateKey].humidity * acc[dateKey].count + entry.humidity) / (acc[dateKey].count + 1);
+          acc[dateKey].rain = (acc[dateKey].rain * acc[dateKey].count + entry.rain) / (acc[dateKey].count + 1);
+          acc[dateKey].count++;
+        }
+        return acc;
+      }, {} as Record<string, { date: Date; temperature: number; humidity: number; rain: number; count: number; }>);
 
-    if (todayData.length === 0) {
-      console.log("No hay datos disponibles");
-      return {
-        lineChartData: { datasets: [] },
-        areaChartData: { datasets: [] },
-        radarChartData: { labels: [], datasets: [] }
-      };
-    }
+      return Object.values(groupedData).sort((a, b) => a.date.getTime() - b.date.getTime());
+    };
 
-    // Agrupar datos por hora para reducir la cantidad de puntos
-    const groupedByHour = todayData.reduce((acc, entry) => {
-      const date = new Date(entry.date);
-      const hourKey = date.getHours();
-      
-      if (!acc[hourKey]) {
-        acc[hourKey] = {
-          date: date,
-          temperature: entry.temperature,
-          humidity: entry.humidity,
-          rain: entry.rain,
-          count: 1
-        };
-      } else {
-        acc[hourKey].temperature = (acc[hourKey].temperature * acc[hourKey].count + entry.temperature) / (acc[hourKey].count + 1);
-        acc[hourKey].humidity = (acc[hourKey].humidity * acc[hourKey].count + entry.humidity) / (acc[hourKey].count + 1);
-        acc[hourKey].rain = (acc[hourKey].rain * acc[hourKey].count + entry.rain) / (acc[hourKey].count + 1);
-        acc[hourKey].count++;
-      }
-      
-      return acc;
-    }, {} as Record<number, { date: Date; temperature: number; humidity: number; rain: number; count: number; }>);
+    // Agrupar datos por día
+    const dailyData = groupDataByDay(sortedData);
 
-    // Convertir datos agrupados a arrays para los gráficos
-    const hourlyData = Object.entries(groupedByHour)
-      .sort(([hourA], [hourB]) => Number(hourA) - Number(hourB))
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .map(([_, data]) => data);
-
-    console.log("Datos procesados por hora:", hourlyData);
-
-    // Datos para gráfico de línea (temperatura por hora)
-    const temperatureData = hourlyData.map(entry => ({
+    // Datos para gráfico de línea (temperatura)
+    const temperatureData = dailyData.map(entry => ({
       x: entry.date,
       y: Number(entry.temperature.toFixed(1))
     }));
 
-    // Datos para gráfico de área (humedad y lluvia por hora)
-    const humidityRainData = hourlyData.map(entry => ({
+    // Datos para gráfico de área (humedad y lluvia)
+    const humidityRainData = dailyData.map(entry => ({
       x: entry.date,
       humidity: Number(entry.humidity.toFixed(1)),
       rain: Number(entry.rain.toFixed(1))
@@ -229,8 +209,8 @@ export default function Dashboard() {
           borderColor: "#3B82F6",
           backgroundColor: "rgba(59, 130, 246, 0.2)",
           tension: 0.3,
-          pointRadius: 4,
-          pointHoverRadius: 6
+          pointRadius: 3,
+          pointHoverRadius: 5
         }]
       },
       areaChartData: {
@@ -241,7 +221,9 @@ export default function Dashboard() {
             borderColor: "#10B981",
             backgroundColor: "rgba(16, 185, 129, 0.2)",
             fill: true,
-            tension: 0.3
+            tension: 0.3,
+            pointRadius: 3,
+            pointHoverRadius: 5
           },
           {
             label: "Lluvia (mm)",
@@ -249,7 +231,9 @@ export default function Dashboard() {
             borderColor: "#6366F1",
             backgroundColor: "rgba(99, 102, 241, 0.2)",
             fill: true,
-            tension: 0.3
+            tension: 0.3,
+            pointRadius: 3,
+            pointHoverRadius: 5
           }
         ]
       },

@@ -40,18 +40,19 @@ export default function TemperatureChart({ data }: TemperatureChartProps) {
       x: {
         type: 'time' as const,
         time: {
-          unit: 'hour',
-          tooltipFormat: 'PP - HH:mm',
+          unit: 'day',
+          tooltipFormat: 'PP',
           displayFormats: { 
-            hour: 'HH:mm'
+            day: 'MMM d',
+            month: 'MMM yyyy'
           }
         },
         grid: {
-          display: false
+          display: true
         },
         ticks: {
           source: 'auto',
-          maxRotation: 0
+          maxRotation: 45
         }
       },
       y: { 

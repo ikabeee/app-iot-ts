@@ -32,7 +32,17 @@ export default function HumidityRainChart({ data }: HumidityRainChartProps) {
         time: {
           unit: 'day',
           tooltipFormat: 'PP',
-          displayFormats: { day: 'MMM d' }
+          displayFormats: { 
+            day: 'MMM d',
+            month: 'MMM yyyy'
+          }
+        },
+        grid: {
+          display: true
+        },
+        ticks: {
+          source: 'auto',
+          maxRotation: 45
         }
       },
       y: { 
