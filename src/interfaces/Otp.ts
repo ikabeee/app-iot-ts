@@ -1,4 +1,4 @@
-export interface Otp{
-    otp: string;
+export interface Otp {
+    token: string;
     email: string;
 }

@@ -30,7 +30,7 @@ export default function OtpForm() {
 
       // Hacemos la llamada al servicio para verificar el OTP
       console.log(email, otp)
-      const response = await AuthService.verifyOTP({ otp, email });
+      const response = await AuthService.verifyOTP({ token: otp, email });
       console.log("Respuesta del servicio:", response);
 
       if (response.status === 200) {

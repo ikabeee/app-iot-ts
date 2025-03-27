@@ -8,10 +8,8 @@ export default function LayoutAdmin() {
 
     return (
         <div className="flex h-screen overflow-hidden">
-            <aside className={`${isCollapsed ? 'w-20' : 'w-64'} transition-width duration-300`}>
-                <SidebarAdmin isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
-            </aside>
-            <div className="flex flex-col flex-1">
+            <SidebarAdmin isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
+            <div className="flex flex-col flex-1 w-full">
                 <nav className="w-full">
                     <NavbarAdmin />
                 </nav>

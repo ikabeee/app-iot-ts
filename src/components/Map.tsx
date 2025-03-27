@@ -11,6 +11,8 @@ interface Marker {
   label: string;
   color?: string;
   status?: string;
+  description?: string;
+  lastUpdate?: string;
 }
 
 interface MapProps {
@@ -69,10 +71,55 @@ export default function Map({
       const markerColor = markerData.color || 
                          (markerData.status === 'DELETED' ? '#EF4444' : '#3B82F6');
       
-      // SVG para el marcador
+      // SVG para el marcador con animación al hover
       el.innerHTML = `
         <div class="marker-container" style="position: relative;">
-          <svg width="30" height="40" viewBox="0 0 24 24" fill="${markerColor}">
+          ${markerData.status === 'DELETED' ? `
+            <div class="marker-pulse" style="
+              position: absolute;
+              width: 30px;
+              height: 30px;
+              background: ${markerColor};
+              border-radius: 50%;
+              opacity: 0.2;
+              animation: deletedPulse 2s infinite;
+              left: 50%;
+              top: 50%;
+              transform: translate(-50%, -50%);
+            "></div>
+            <div class="deleted-overlay" style="
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              z-index: 1;
+            ">
+              <div style="
+                width: 2px;
+                height: 40px;
+                background: ${markerColor};
+                transform: rotate(45deg);
+                opacity: 0.8;
+              "></div>
+            </div>
+          ` : `
+            <div class="marker-pulse" style="
+              position: absolute;
+              width: 30px;
+              height: 30px;
+              background: ${markerColor};
+              border-radius: 50%;
+              opacity: 0.3;
+              animation: pulse 2s infinite;
+              left: 50%;
+              top: 50%;
+              transform: translate(-50%, -50%);
+            "></div>
+          `}
+          <svg width="30" height="40" viewBox="0 0 24 24" fill="${markerColor}" 
+               style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); transition: all 0.3s ease-in-out; cursor: pointer;">
             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
           </svg>
           <div class="marker-label" style="
@@ -81,31 +128,103 @@ export default function Map({
             left: 50%;
             transform: translateX(-50%);
             background: white;
-            padding: 4px 8px;
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08);
+            font-size: 13px;
             font-weight: 600;
             white-space: nowrap;
             margin-bottom: 8px;
+            opacity: 0;
+            transition: all 0.3s ease-in-out;
+            border: 1px solid rgba(0,0,0,0.1);
+            backdrop-filter: blur(4px);
+            ${markerData.status === 'DELETED' ? 'text-decoration: line-through; color: #EF4444;' : ''}
           ">${markerData.label}</div>
         </div>
       `;
 
-      // Crear el marcador
+      // Añadir eventos hover al marcador
+      el.addEventListener('mouseenter', () => {
+        const svg = el.querySelector('svg') as SVGElement;
+        const label = el.querySelector('.marker-label') as HTMLElement;
+        const overlay = el.querySelector('.deleted-overlay') as HTMLElement;
+        if (svg) {
+          svg.style.transform = 'scale(1.2) translateY(-2px)';
+          svg.style.filter = 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))';
+        }
+        if (label) {
+          label.style.opacity = '1';
+          label.style.transform = 'translateX(-50%) translateY(-2px)';
+        }
+        if (overlay && markerData.status === 'DELETED') {
+          overlay.style.opacity = '0.5';
+        }
+      });
+
+      el.addEventListener('mouseleave', () => {
+        const svg = el.querySelector('svg') as SVGElement;
+        const label = el.querySelector('.marker-label') as HTMLElement;
+        const overlay = el.querySelector('.deleted-overlay') as HTMLElement;
+        if (svg) {
+          svg.style.transform = 'scale(1) translateY(0)';
+          svg.style.filter = 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))';
+        }
+        if (label) {
+          label.style.opacity = '0';
+          label.style.transform = 'translateX(-50%) translateY(0)';
+        }
+        if (overlay && markerData.status === 'DELETED') {
+          overlay.style.opacity = '0.8';
+        }
+      });
+
+      // Crear el marcador con popup mejorado
       const marker = new mapboxgl.Marker({
         element: el,
         anchor: 'bottom'
       })
         .setLngLat([markerData.lng, markerData.lat])
-        .setPopup(new mapboxgl.Popup({ offset: 25 })
+        .setPopup(new mapboxgl.Popup({ 
+          offset: 25,
+          className: 'custom-popup',
+          maxWidth: '300px'
+        })
           .setHTML(`
-            <div class="p-2" style="min-width: 180px;">
-              <h3 class="font-bold">${markerData.label}</h3>
-              <div class="flex items-center mt-1">
-                <span class="inline-block w-3 h-3 rounded-full mr-2" 
-                      style="background: ${markerColor}"></span>
-                <span>${markerData.status || 'Parcela'}</span>
+            <div class="p-4" style="min-width: 250px;">
+              <div class="flex items-center justify-between mb-3 pb-2 border-b border-gray-100">
+                <div class="flex items-center space-x-2">
+                  <div class="w-2 h-2 rounded-full" style="background: ${markerColor}"></div>
+                  <h3 class="font-bold text-lg text-gray-800">${markerData.label}</h3>
+                </div>
+                <span class="px-2 py-1 text-xs font-medium rounded-full" 
+                      style="background: ${markerColor}20; color: ${markerColor}">
+                  ${markerData.status === 'DELETED' ? 'Eliminado' : (markerData.status || 'Activo')}
+                </span>
+              </div>
+              <div class="space-y-3">
+                ${markerData.description ? `
+                  <div class="text-sm">
+                    <div class="flex items-center text-gray-500 mb-1">
+                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      </svg>
+                      <span class="font-medium">Descripción</span>
+                    </div>
+                    <p class="text-gray-600 leading-relaxed">${markerData.description}</p>
+                  </div>
+                ` : ''}
+                ${markerData.lastUpdate ? `
+                  <div class="text-sm">
+                    <div class="flex items-center text-gray-500 mb-1">
+                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      </svg>
+                      <span class="font-medium">Última actualización</span>
+                    </div>
+                    <p class="text-gray-600">${markerData.lastUpdate}</p>
+                  </div>
+                ` : ''}
               </div>
             </div>
           `))
