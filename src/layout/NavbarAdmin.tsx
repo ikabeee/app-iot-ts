@@ -70,7 +70,7 @@ export default function NavbarAdmin() {
                                 as: "button",
                                 isFocusable: true,
                             }}
-                            name="Jane Doe"
+                            name="Carlos Gonzalez"
                             description="Administrator"
                             classNames={{ 
                                 base: "transition-transform hover:scale-105",

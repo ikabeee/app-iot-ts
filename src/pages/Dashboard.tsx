@@ -28,6 +28,33 @@ import {
 import "chartjs-adapter-date-fns"
 import { subHours } from "date-fns"
 
+// Estilos personalizados para el scroll
+const scrollbarStyles = `
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: 10px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.2);
+  }
+  
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.03);
+  }
+`
+
 // Registrar componentes de Chart.js
 ChartJS.register(
   CategoryScale,
@@ -471,168 +498,173 @@ export default function Dashboard() {
   }
 
   return (
-    <main className="min-h-screen p-6 md:p-8 bg-gradient-to-br from-gray-50 to-gray-100">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="font-bold text-3xl md:text-4xl mb-8 text-gray-800">Dashboard</h1>
+    <>
+      <style jsx global>
+        {scrollbarStyles}
+      </style>
+      <main className="min-h-screen p-6 md:p-8 bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="max-w-7xl mx-auto">
+          <h1 className="font-bold text-3xl md:text-4xl mb-8 text-gray-800">Dashboard</h1>
 
-        <div className="grid gap-8 lg:grid-cols-3">
-          <div className="lg:col-span-2">
-            <Card className="py-6 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white rounded-2xl">
-              <CardHeader className="pb-2 pt-4 px-6 flex-col items-start">
-                <h2 className="font-bold text-2xl text-gray-800">Tus parcelas activas 📡</h2>
-                <p className="text-gray-600 mt-1">Visualiza la ubicación de tus parcelas activas en el sistema</p>
-              </CardHeader>
-              <CardBody className="overflow-hidden py-4 px-6">
-                <Map
-                  className="w-full h-[500px] rounded-xl overflow-hidden shadow-lg"
-                  markers={activePlots.map((plot) => ({
-                    lat: plot.lat,
-                    lng: plot.lng,
-                    label: plot.name,
-                    status: plot.status,
-                    location: plot.location,
-                    manager: plot.manager,
-                    cropType: plot.cropType,
-                    lastWatering: plot.lastWatering,
-                    id: plot.id,
-                  }))}
-                />
-              </CardBody>
-            </Card>
-          </div>
+          <div className="grid gap-8 lg:grid-cols-3">
+            <div className="lg:col-span-2">
+              <Card className="py-6 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white rounded-2xl">
+                <CardHeader className="pb-2 pt-4 px-6 flex-col items-start">
+                  <h2 className="font-bold text-2xl text-gray-800">Tus parcelas activas 📡</h2>
+                  <p className="text-gray-600 mt-1">Visualiza la ubicación de tus parcelas activas en el sistema</p>
+                </CardHeader>
+                <CardBody className="overflow-hidden py-4 px-6">
+                  <Map
+                    className="w-full h-[500px] rounded-xl overflow-hidden shadow-lg"
+                    markers={activePlots.map((plot) => ({
+                      lat: plot.lat,
+                      lng: plot.lng,
+                      label: plot.name,
+                      status: plot.status,
+                      location: plot.location,
+                      manager: plot.manager,
+                      cropType: plot.cropType,
+                      lastWatering: plot.lastWatering,
+                      id: plot.id,
+                    }))}
+                  />
+                </CardBody>
+              </Card>
+            </div>
 
-          <div className="grid grid-cols-2 gap-6">
-            <MeasureCard
-              className="shadow-md hover:shadow-lg transition-shadow duration-300 bg-white rounded-xl"
-              title="Intensidad del sol"
-              value={`${sensorData.sun}%`}
-              type="sun"
-              numericValue={sensorData.sun}
-            />
-            <MeasureCard
-              className="shadow-md hover:shadow-lg transition-shadow duration-300 bg-white rounded-xl"
-              title="Temperatura"
-              value={`${sensorData.temperature}°C`}
-              type="temperature"
-              numericValue={sensorData.temperature}
-            />
-            <MeasureCard
-              className="shadow-md hover:shadow-lg transition-shadow duration-300 bg-white rounded-xl"
-              title="Probabilidad de lluvia"
-              value={`${sensorData.rain}%`}
-              type="rain"
-              numericValue={sensorData.rain}
-            />
-            <MeasureCard
-              className="shadow-md hover:shadow-lg transition-shadow duration-300 bg-white rounded-xl"
-              title="Humedad"
-              value={`${sensorData.humidity}%`}
-              type="humidity"
-              numericValue={sensorData.humidity}
-            />
-          </div>
-        </div>
-
-        <div className="mt-12">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-            <h2 className="font-bold text-2xl md:text-3xl text-gray-800">Histórico de Sensores</h2>
-
-            <div className="flex items-center mt-4 md:mt-0 space-x-2 bg-white p-2 rounded-lg shadow">
-              <span className="text-sm text-gray-600">Mostrar datos de:</span>
-              <div className="flex space-x-1">
-                {["6h", "12h", "24h"].map((range) => (
-                  <button
-                    key={range}
-                    onClick={() => setSelectedTimeRange(range)}
-                    className={`px-3 py-1 text-sm rounded-md transition-colors ${
-                      selectedTimeRange === range
-                        ? "bg-blue-500 text-white"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    }`}
-                  >
-                    {range}
-                  </button>
-                ))}
-              </div>
+            <div className="grid grid-cols-2 gap-6">
+              <MeasureCard
+                className="shadow-md hover:shadow-lg transition-shadow duration-300 bg-white rounded-xl"
+                title="Intensidad del sol"
+                value={`${sensorData.sun}%`}
+                type="sun"
+                numericValue={sensorData.sun}
+              />
+              <MeasureCard
+                className="shadow-md hover:shadow-lg transition-shadow duration-300 bg-white rounded-xl"
+                title="Temperatura"
+                value={`${sensorData.temperature}°C`}
+                type="temperature"
+                numericValue={sensorData.temperature}
+              />
+              <MeasureCard
+                className="shadow-md hover:shadow-lg transition-shadow duration-300 bg-white rounded-xl"
+                title="Probabilidad de lluvia"
+                value={`${sensorData.rain}%`}
+                type="rain"
+                numericValue={sensorData.rain}
+              />
+              <MeasureCard
+                className="shadow-md hover:shadow-lg transition-shadow duration-300 bg-white rounded-xl"
+                title="Humedad"
+                value={`${sensorData.humidity}%`}
+                type="humidity"
+                numericValue={sensorData.humidity}
+              />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            <Card className="p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white rounded-2xl">
-              <CardHeader className="pb-2 pt-4 px-6 flex-col items-start">
-                <h2 className="font-bold text-xl text-gray-800">Temperatura</h2>
-                <p className="text-gray-600 mt-1">Seguimiento de la temperatura en las últimas {selectedTimeRange}</p>
-              </CardHeader>
-              <CardBody className="h-[300px] px-6">
-                <TemperatureChart data={lineChartData} />
-                <div className="mt-4 text-sm text-gray-600">
-                  <p className="font-medium">Leyenda:</p>
-                  <p>• La línea muestra la temperatura promedio por hora</p>
-                  <p>• Los puntos representan cada medición registrada</p>
-                  <p>• Valores óptimos: 18-25°C para la mayoría de cultivos</p>
-                </div>
-              </CardBody>
-            </Card>
+          <div className="mt-12">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+              <h2 className="font-bold text-2xl md:text-3xl text-gray-800">Histórico de Sensores</h2>
 
-            <Card className="p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white rounded-2xl">
-              <CardHeader className="pb-2 pt-4 px-6 flex-col items-start">
-                <h2 className="font-bold text-xl text-gray-800">Humedad y Lluvia</h2>
-                <p className="text-gray-600 mt-1">
-                  Análisis de humedad y precipitaciones en las últimas {selectedTimeRange}
-                </p>
-              </CardHeader>
-              <CardBody className="h-[300px] px-6">
-                <HumidityRainChart data={areaChartData} />
-                <div className="mt-4 text-sm text-gray-600">
-                  <p className="font-medium">Leyenda:</p>
-                  <p>
-                    • <span className="text-emerald-500">Verde</span>: Humedad del suelo (%)
+              <div className="flex items-center mt-4 md:mt-0 space-x-2 bg-white p-2 rounded-lg shadow">
+                <span className="text-sm text-gray-600">Mostrar datos de:</span>
+                <div className="flex space-x-1">
+                  {["6h", "12h", "24h"].map((range) => (
+                    <button
+                      key={range}
+                      onClick={() => setSelectedTimeRange(range)}
+                      className={`px-3 py-1 text-sm rounded-md transition-colors ${
+                        selectedTimeRange === range
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      }`}
+                    >
+                      {range}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <Card className="p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white rounded-2xl">
+                <CardHeader className="pb-2 pt-4 px-6 flex-col items-start">
+                  <h2 className="font-bold text-xl text-gray-800">Temperatura</h2>
+                  <p className="text-gray-600 mt-1">Seguimiento de la temperatura en las últimas {selectedTimeRange}</p>
+                </CardHeader>
+                <CardBody className="h-[300px] px-6 overflow-auto custom-scrollbar">
+                  <TemperatureChart data={lineChartData} />
+                  <div className="mt-4 text-sm text-gray-600">
+                    <p className="font-medium">Leyenda:</p>
+                    <p>• La línea muestra la temperatura promedio por hora</p>
+                    <p>• Los puntos representan cada medición registrada</p>
+                    <p>• Valores óptimos: 18-25°C para la mayoría de cultivos</p>
+                  </div>
+                </CardBody>
+              </Card>
+
+              <Card className="p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white rounded-2xl">
+                <CardHeader className="pb-2 pt-4 px-6 flex-col items-start">
+                  <h2 className="font-bold text-xl text-gray-800">Humedad y Lluvia</h2>
+                  <p className="text-gray-600 mt-1">
+                    Análisis de humedad y precipitaciones en las últimas {selectedTimeRange}
                   </p>
-                  <p>
-                    • <span className="text-indigo-500">Azul</span>: Precipitaciones (mm)
-                  </p>
-                  <p>• Las áreas sombreadas muestran la tendencia general</p>
-                </div>
-              </CardBody>
-            </Card>
-          </div>
+                </CardHeader>
+                <CardBody className="h-[300px] px-6 overflow-auto custom-scrollbar">
+                  <HumidityRainChart data={areaChartData} />
+                  <div className="mt-4 text-sm text-gray-600">
+                    <p className="font-medium">Leyenda:</p>
+                    <p>
+                      • <span className="text-emerald-500">Verde</span>: Humedad del suelo (%)
+                    </p>
+                    <p>
+                      • <span className="text-indigo-500">Azul</span>: Precipitaciones (mm)
+                    </p>
+                    <p>• Las áreas sombreadas muestran la tendencia general</p>
+                  </div>
+                </CardBody>
+              </Card>
+            </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            <Card className="p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white rounded-2xl">
-              <CardHeader className="pb-2 pt-4 px-6 flex-col items-start">
-                <h2 className="font-bold text-xl text-gray-800">Exposición Solar</h2>
-                <p className="text-gray-600 mt-1">Intensidad de luz solar en las últimas {selectedTimeRange}</p>
-              </CardHeader>
-              <CardBody className="h-[300px] px-6">
-                <SunExposureChart data={sunChartData} />
-                <div className="mt-4 text-sm text-gray-600">
-                  <p className="font-medium">Leyenda:</p>
-                  <p>• Las barras muestran el porcentaje de exposición solar</p>
-                  <p>• Valores más altos indican mayor intensidad de luz</p>
-                  <p>• Ideal: 60-80% para cultivos de alta demanda lumínica</p>
-                </div>
-              </CardBody>
-            </Card>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <Card className="p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white rounded-2xl">
+                <CardHeader className="pb-2 pt-4 px-6 flex-col items-start">
+                  <h2 className="font-bold text-xl text-gray-800">Exposición Solar</h2>
+                  <p className="text-gray-600 mt-1">Intensidad de luz solar en las últimas {selectedTimeRange}</p>
+                </CardHeader>
+                <CardBody className="h-[300px] px-6 overflow-auto custom-scrollbar">
+                  <SunExposureChart data={sunChartData} />
+                  <div className="mt-4 text-sm text-gray-600">
+                    <p className="font-medium">Leyenda:</p>
+                    <p>• Las barras muestran el porcentaje de exposición solar</p>
+                    <p>• Valores más altos indican mayor intensidad de luz</p>
+                    <p>• Ideal: 60-80% para cultivos de alta demanda lumínica</p>
+                  </div>
+                </CardBody>
+              </Card>
 
-            <Card className="p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white rounded-2xl">
-              <CardHeader className="pb-2 pt-4 px-6 flex-col items-start">
-                <h2 className="font-bold text-xl text-gray-800">Comparativa por Parcela</h2>
-                <p className="text-gray-600 mt-1">Análisis comparativo de todas las parcelas activas</p>
-              </CardHeader>
-              <CardBody className="h-[300px] px-6">
-                <AveragesRadarChart data={radarChartData} />
-                <div className="mt-4 text-sm text-gray-600">
-                  <p className="font-medium">Leyenda:</p>
-                  <p>• Cada color representa una parcela diferente</p>
-                  <p>• La línea gris muestra el promedio general</p>
-                  <p>• Los valores son promedios de las últimas {selectedTimeRange}</p>
-                </div>
-              </CardBody>
-            </Card>
+              <Card className="p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white rounded-2xl">
+                <CardHeader className="pb-2 pt-4 px-6 flex-col items-start">
+                  <h2 className="font-bold text-xl text-gray-800">Comparativa por Parcela</h2>
+                  <p className="text-gray-600 mt-1">Análisis comparativo de todas las parcelas activas</p>
+                </CardHeader>
+                <CardBody className="h-[300px] px-6 overflow-auto custom-scrollbar">
+                  <AveragesRadarChart data={radarChartData} />
+                  <div className="mt-4 text-sm text-gray-600">
+                    <p className="font-medium">Leyenda:</p>
+                    <p>• Cada color representa una parcela diferente</p>
+                    <p>• La línea gris muestra el promedio general</p>
+                    <p>• Los valores son promedios de las últimas {selectedTimeRange}</p>
+                  </div>
+                </CardBody>
+              </Card>
+            </div>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   )
 }
 
