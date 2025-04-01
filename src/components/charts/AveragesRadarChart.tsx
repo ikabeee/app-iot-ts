@@ -1,41 +1,73 @@
-import { Radar } from "react-chartjs-2";
-import { ChartData } from "chart.js";
+"use client"
+
+import { Radar } from "react-chartjs-2"
+import type { ChartOptions } from "chart.js"
 
 interface AveragesRadarChartProps {
-  data: {
-    labels: string[];
-    datasets: {
-      label: string;
-      data: number[];
-      backgroundColor: string;
-      borderColor: string;
-      pointBackgroundColor: string;
-    }[];
-  };
+  data: any
 }
 
 export default function AveragesRadarChart({ data }: AveragesRadarChartProps) {
-  const options = {
+  const options: ChartOptions<"radar"> = {
     responsive: true,
     maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "top",
+        labels: {
+          boxWidth: 15,
+          usePointStyle: true,
+        },
+      },
+      tooltip: {
+        callbacks: {
+          label: (context) => {
+            let label = context.dataset.label || ""
+            if (label) {
+              label += ": "
+            }
+            if (context.parsed !== null) {
+              const value = context.parsed.r
+              // Añadir unidades según el índice
+              const units = ["% de sol", "mm de lluvia", "% de humedad", "°C"]
+              const index = context.dataIndex
+              label += value + (units[index] ? ` ${units[index]}` : "")
+            }
+            return label
+          },
+        },
+      },
+    },
     scales: {
       r: {
-        angleLines: { display: true },
+        angleLines: {
+          display: true,
+          color: "rgba(0, 0, 0, 0.1)",
+        },
         suggestedMin: 0,
-        suggestedMax: 100,
+        pointLabels: {
+          font: {
+            size: 12,
+            weight: "bold",
+          },
+        },
         ticks: {
-          callback: (value: number) => {
-            if (value === 0) return '0';
-            if (value === 25) return '25';
-            if (value === 50) return '50';
-            if (value === 75) return '75';
-            if (value === 100) return '100';
-            return '';
-          }
-        }
-      }
-    }
-  };
+          backdropColor: "transparent",
+          showLabelBackdrop: false,
+        },
+      },
+    },
+    elements: {
+      line: {
+        borderWidth: 2,
+      },
+      point: {
+        radius: 3,
+        hoverRadius: 5,
+      },
+    },
+  }
 
-  return <Radar data={data} options={options} />;
-} 
+  return <Radar options={options} data={data} />
+}
+

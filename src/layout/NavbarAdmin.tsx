@@ -53,16 +53,6 @@ export default function NavbarAdmin() {
                     variant="light"
                     color="secondary"
                     className="h-10 w-10"
-                    aria-label="Buscar"
-                >
-                    <SearchIcon className="w-5 h-5" />
-                </Button>
-
-                <Button
-                    isIconOnly
-                    variant="light"
-                    color="secondary"
-                    className="h-10 w-10"
                     aria-label="Notificaciones"
                 >
                     <Bell className="w-5 h-5" />
@@ -112,7 +102,7 @@ export default function NavbarAdmin() {
                             color="danger" 
                             variant="flat"
                             startContent={<LogOut className="w-4 h-4" />}
-                            onClick={handleLogout}
+                            onPress={handleLogout}
                         >
                             Cerrar sesión
                         </DropdownItem>

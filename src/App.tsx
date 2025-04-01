@@ -2,7 +2,6 @@ import { Routes, Route, useNavigate, NavigateOptions, useHref } from "react-rout
 import Dashboard from "./pages/Dashboard"
 import LayoutAdmin from "./layout/LayoutAdmin"
 import Login from "./pages/auth/Login"
-import Register from "./pages/auth/Register"
 import { HeroUIProvider } from "@heroui/system"
 import DeletedPlots from "./pages/DeletedPlots"
 import Otp from "./pages/auth/Otp"
@@ -24,11 +23,6 @@ function App() {
           <Route path="/" element={
             <ProtectedRoute requireAuth={false}>
               <Login />
-            </ProtectedRoute>
-          } />
-          <Route path="register" element={
-            <ProtectedRoute requireAuth={false}>
-              <Register />
             </ProtectedRoute>
           } />
           <Route path="otp" element={

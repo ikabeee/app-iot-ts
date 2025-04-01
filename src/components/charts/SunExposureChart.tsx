@@ -1,13 +1,24 @@
-"use client"
+import { Bar } from "react-chartjs-2"
 
-import { Line } from "react-chartjs-2"
-
-interface HumidityRainChartProps {
-  data: any
-  timeRange: string
+interface TimeDataPoint {
+  x: Date
+  y: number
 }
 
-export default function HumidityRainChart({ data, timeRange }: HumidityRainChartProps) {
+interface SunExposureChartProps {
+  data: {
+    datasets: {
+      label: string
+      data: TimeDataPoint[]
+      backgroundColor: string
+      borderColor: string
+      borderWidth?: number
+      borderRadius?: number
+    }[]
+  }
+}
+
+export default function SunExposureChart({ data }: SunExposureChartProps) {
   // Modificar las opciones del gráfico para mostrar más datos
   const options = {
     responsive: true,
@@ -69,17 +80,18 @@ export default function HumidityRainChart({ data, timeRange }: HumidityRainChart
       },
       y: {
         beginAtZero: true,
+        max: 100,
         title: {
           display: true,
-          text: "Valor",
+          text: "Exposición solar (%)",
         },
         grid: {
-          color: "rgba(0, 0, 0, 0.1)",
+          color: "rgba(0, 0, 0, 0.05)",
         },
       },
     },
   }
 
-  return <Line options={options} data={data} />
+  return <Bar data={data} options={options} />
 }
 

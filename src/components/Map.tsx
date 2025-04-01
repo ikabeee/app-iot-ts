@@ -13,6 +13,11 @@ interface Marker {
   status?: string;
   description?: string;
   lastUpdate?: string;
+  location?: string;
+  manager?: string;
+  cropType?: string;
+  lastWatering?: string;
+  id?: number;
 }
 
 interface MapProps {
@@ -128,19 +133,69 @@ export default function Map({
             left: 50%;
             transform: translateX(-50%);
             background: white;
-            padding: 6px 12px;
-            border-radius: 16px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08);
+            padding: 8px 12px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08);
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 500;
             white-space: nowrap;
             margin-bottom: 8px;
             opacity: 0;
-            transition: all 0.3s ease-in-out;
-            border: 1px solid rgba(0,0,0,0.1);
-            backdrop-filter: blur(4px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(0,0,0,0.08);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 250px;
             ${markerData.status === 'DELETED' ? 'text-decoration: line-through; color: #EF4444;' : ''}
-          ">${markerData.label}</div>
+          ">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full" style="background: ${markerColor}"></div>
+                <span class="font-semibold">${markerData.label}</span>
+              </div>
+              ${markerData.status ? `
+                <div class="px-2 py-0.5 text-xs font-medium rounded-full" 
+                     style="background: ${markerColor}15; color: ${markerColor}; border: 1px solid ${markerColor}30">
+                  ${markerData.status === 'DELETED' ? 'Eliminado' : markerData.status}
+                </div>
+              ` : ''}
+            </div>
+            ${markerData.location ? `
+              <div class="text-xs text-gray-600 flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                <span>${markerData.location}</span>
+              </div>
+            ` : ''}
+            ${markerData.manager ? `
+              <div class="text-xs text-gray-600 flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+                <span>${markerData.manager}</span>
+              </div>
+            ` : ''}
+            ${markerData.cropType ? `
+              <div class="text-xs text-gray-600 flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <span>${markerData.cropType}</span>
+              </div>
+            ` : ''}
+            ${markerData.lastWatering ? `
+              <div class="text-xs text-gray-500 flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                </svg>
+                <span>Último riego: ${new Date(markerData.lastWatering).toLocaleDateString()}</span>
+              </div>
+            ` : ''}
+          </div>
         </div>
       `;
 
@@ -185,49 +240,6 @@ export default function Map({
         anchor: 'bottom'
       })
         .setLngLat([markerData.lng, markerData.lat])
-        .setPopup(new mapboxgl.Popup({ 
-          offset: 25,
-          className: 'custom-popup',
-          maxWidth: '300px'
-        })
-          .setHTML(`
-            <div class="p-4" style="min-width: 250px;">
-              <div class="flex items-center justify-between mb-3 pb-2 border-b border-gray-100">
-                <div class="flex items-center space-x-2">
-                  <div class="w-2 h-2 rounded-full" style="background: ${markerColor}"></div>
-                  <h3 class="font-bold text-lg text-gray-800">${markerData.label}</h3>
-                </div>
-                <span class="px-2 py-1 text-xs font-medium rounded-full" 
-                      style="background: ${markerColor}20; color: ${markerColor}">
-                  ${markerData.status === 'DELETED' ? 'Eliminado' : (markerData.status || 'Activo')}
-                </span>
-              </div>
-              <div class="space-y-3">
-                ${markerData.description ? `
-                  <div class="text-sm">
-                    <div class="flex items-center text-gray-500 mb-1">
-                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                      </svg>
-                      <span class="font-medium">Descripción</span>
-                    </div>
-                    <p class="text-gray-600 leading-relaxed">${markerData.description}</p>
-                  </div>
-                ` : ''}
-                ${markerData.lastUpdate ? `
-                  <div class="text-sm">
-                    <div class="flex items-center text-gray-500 mb-1">
-                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                      </svg>
-                      <span class="font-medium">Última actualización</span>
-                    </div>
-                    <p class="text-gray-600">${markerData.lastUpdate}</p>
-                  </div>
-                ` : ''}
-              </div>
-            </div>
-          `))
         .addTo(mapRef.current!);
 
       markersRef.current.push(marker);

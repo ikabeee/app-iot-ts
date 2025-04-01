@@ -50,7 +50,7 @@ export default function DeletedPlots() {
       <div className="mb-6">
         <h1 className="font-bold text-3xl text-gray-800">Parcelas Eliminadas</h1>
         <p className="text-gray-600 mt-2">
-          Visualiza y gestiona las parcelas que han sido eliminadas del sistema
+          Visualiza las parcelas que han sido eliminadas del sistema
         </p>
       </div>
 
@@ -65,7 +65,12 @@ export default function DeletedPlots() {
                   lng: plot.lng,
                   label: plot.name,
                   color: 'red',
-                  status: plot.status
+                  status: plot.status,
+                  location: plot.location,
+                  manager: plot.manager,
+                  cropType: plot.cropType,
+                  lastWatering: plot.lastWatering,
+                  id: plot.id
                 }))}
               />
             </div>

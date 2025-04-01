@@ -61,6 +61,7 @@ export default function OtpForm() {
       } else {
         setError("Error al verificar el OTP. Intenta nuevamente.");
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error('Error en verificación OTP:', err);
       console.error('Error response:', err.response?.data);
